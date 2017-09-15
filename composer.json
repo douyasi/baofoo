@@ -1,0 +1,18 @@
+{
+    "name": "douyasi/baofoo",
+    "description": "Baofoo third-party package",
+    "keywords": ["baofoo", "pay", "宝付"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "raoyc",
+            "email": "rayc2009@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Douyasi\\Baofoo\\": "src"
+        }
+    },
+    "minimum-stability": "stable"
+}
