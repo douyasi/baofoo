@@ -2,7 +2,12 @@
 
 namespace Douyasi\Baofoo;
 
-
+/**
+ * Class BaofooException 宝付异常类
+ * 
+ * @author raoyc <raoyc2009@gmaill.com>
+ * @link   https://raoyc.com
+ */
 class BaofooException extends \Exception
 {
 
@@ -18,9 +23,9 @@ class BaofooException extends \Exception
 
     const ALIPAY_GET_BANKCARD_INFO_FAILURE = 666666001;
     const BAOFOO_GET_RSA_INFO_ERROR        = 666666101;
-    const BAOFOO_LOADING_CONFIG_ERROR        = 666666102;
-    const CURL_POST_DATA_ERROR = 666666901;
-    const CURL_NOT_INSTALLED = 666666902;
+    const BAOFOO_LOADING_CONFIG_ERROR      = 666666102;
+    const CURL_POST_DATA_ERROR             = 666666901;
+    const CURL_NOT_INSTALLED               = 666666902;
 
     public static $errorMessages = [
         self::ALIPAY_GET_BANKCARD_INFO_FAILURE => '获取银行卡信息失败',
