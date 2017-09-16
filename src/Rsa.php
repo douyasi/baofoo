@@ -70,7 +70,7 @@ class Rsa
             }
             $decrypted = base64_decode($decrypted);
         } catch (\Exception $e) {
-            throw BaofooException('Baofoo rsa decryptByPublicKey error:', $e->getMessages(), BaofooException::BAOFOO_GET_RSA_INFO_ERROR);
+            throw BaofooException('Baofoo rsa decryptByPublicKey error:', $e->getMessage(), BaofooException::BAOFOO_GET_RSA_INFO_ERROR);
         }
 
         return $decrypted;
@@ -96,7 +96,7 @@ class Rsa
                 $encryptPos += self::BAOFOO_ENCRYPT_LEN;
             }
         } catch (\Exception $e) {
-            throw BaofooException('Baofoo rsa encryptedByPrivateKey error:', $e->getMessages(), BaofooException::BAOFOO_GET_RSA_INFO_ERROR);
+            throw BaofooException('Baofoo rsa encryptedByPrivateKey error:', $e->getMessage(), BaofooException::BAOFOO_GET_RSA_INFO_ERROR);
         }
 
         return $encrypted;

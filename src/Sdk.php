@@ -34,12 +34,13 @@ class Sdk
      * 04 支付类交易 [已废弃]
      * 05 发送短信类交易 [已废弃]
      * 
-     * 06 交易状态查询类交易
+     * 06 交易状态查询类交易 [已变更为31]
      *
      * 11 预绑卡类交易
      * 12 确认绑卡类交易
      * 15 预支付交易(发送短信)
      * 16 支付确认交易
+     * 31 交易状态查询类交易
      */
 
     /**
@@ -149,25 +150,25 @@ class Sdk
     public function bindCard($bindData)
     {
         $params = [
-            'txn_sub_type'    => '01', //交易子类(M),取值:01
-            'trans_id'        => Tool::generateTransId(), //商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复;
-            'acc_no'          => '', //绑定卡号(M),请求绑定的银行卡号
-            'id_card_type'    => '01', //身份证类型(O),默认 01 为身份证号
-            'id_card'         => '', //身份证号(M)
-            'id_holder'       => '', //持卡人姓名(M)
-            'mobile'          => '', //银行卡绑定手机号(M),预留手机号
-            'valid_date'      => '', //卡有效期(C)
-            'valid_no'        => '', //卡安全码(C),银行卡背后最后三位数字
-            'pay_code'        => '', //银行编码(M)
-            'sms_code'        => '', //短信验证码(C),绑定关系的短信验证码,若开通短信类交易则必填
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '01',  // 交易子类(M),取值:01
+            'trans_id'        => Tool::generateTransId(),  //商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复;
+            'acc_no'          => '',  // 绑定卡号(M),请求绑定的银行卡号
+            'id_card_type'    => '01',  // 身份证类型(O),默认 01 为身份证号
+            'id_card'         => '',  // 身份证号(M)
+            'id_holder'       => '',  // 持卡人姓名(M)
+            'mobile'          => '',  // 银行卡绑定手机号(M),预留手机号
+            'valid_date'      => '',  // 卡有效期(C)
+            'valid_no'        => '',  // 卡安全码(C),银行卡背后最后三位数字
+            'pay_code'        => '',  // 银行编码(M)
+            'sms_code'        => '',  // 短信验证码(C),绑定关系的短信验证码,若开通短信类交易则必填
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  // 请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
         $data = array_merge($params, $bindData);
 
-        if (!$data['pay_code']) { // 建议不要手动传 `pay_code`
+        if (!$data['pay_code']) {  // 建议不要手动传 `pay_code`
             try {
                 $card = Bankcard::info($data['acc_no']);
                 if ($card['validated']) {
@@ -197,12 +198,11 @@ class Sdk
      */
     public function unbindCard($unbindData)
     {
-
         $params = [
-            'txn_sub_type'    => '02', //交易子类(M)
-            'bind_id'         => '', //绑定标识号(M),用于绑定关系的唯一标识
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '02',  // 交易子类(M)
+            'bind_id'         => '',  // 绑定标识号(M),用于绑定关系的唯一标识
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  // 请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -220,10 +220,10 @@ class Sdk
     public function queryBindCard($queryBindData)
     {
         $params = [
-            'txn_sub_type'    => '03', //交易子类(M)
-            'acc_no'          => '', //绑定的卡号(M),请求绑定的银行卡号
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '03',  // 交易子类(M)
+            'acc_no'          => '',  // 绑定的卡号(M),请求绑定的银行卡号
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  //请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -241,19 +241,19 @@ class Sdk
     public function preBindCard($bindData)
     {
         $params = [
-            'txn_sub_type'    => '11', //交易子类(M)
-            'trans_id'        => Tool::generateTransId(), //商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复;
-            'acc_no'          => '', //绑定卡号(M),请求绑定的银行卡号
-            'id_card_type'    => '01', //身份证类型(O),默认 01 为身份证号
-            'id_card'         => '', //身份证号(M)
-            'id_holder'       => '', //持卡人姓名(M)
-            'mobile'          => '', //银行卡绑定手机号(M),预留手机号
-            'valid_date'      => '', //卡有效期(C)
-            'valid_no'        => '', //卡安全码(C),银行卡背后最后三位数字
-            'pay_code'        => '', //银行编码(M)
-            'trade_date'      => '', //订单日期
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '11',  // 交易子类(M)
+            'trans_id'        => Tool::generateTransId(), // 商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复
+            'acc_no'          => '',  // 绑定卡号(M),请求绑定的银行卡号
+            'id_card_type'    => '01',  // 身份证类型(O),默认 01 为身份证号
+            'id_card'         => '',  // 身份证号(M)
+            'id_holder'       => '',  // 持卡人姓名(M)
+            'mobile'          => '',  // 银行卡绑定手机号(M),预留手机号
+            'valid_date'      => '',  // 卡有效期(C)
+            'valid_no'        => '',  // 卡安全码(C),银行卡背后最后三位数字
+            'pay_code'        => '',  // 银行编码(M)
+            'trade_date'      => '',  // 订单日期(M),可以不传，sdk 根据当前日期自动生成
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  // 请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -271,12 +271,12 @@ class Sdk
     public function doBindCard($bindData)
     {
         $params = [
-            'txn_sub_type'    => '12', //交易子类(M)
-            'trans_id'        => '', //这里传入的是 预绑卡接口返回的商户订单号
-            'sms_code'        => '', //短信验证码
-            'trade_date'      => '', //订单日期
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '12',  // 交易子类(M)
+            'trans_id'        => '',  // 这里传入的是 预绑卡接口返回的商户订单号
+            'sms_code'        => '',  // 短信验证码(M)
+            'trade_date'      => '',  // 订单日期(M),可以不传,sdk 会自动生成
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  // 请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -294,14 +294,14 @@ class Sdk
     public function prePay($payData)
     {
         $params = [
-            'txn_sub_type'    => '15', //交易子类(M)
-            'trans_id'        => Tool::generateTransId(), //商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复;
-            'bind_id'         => '', //绑定标识号(M),用于绑定关系的唯一标识
-            'txn_amt'         => '', //短信验证码(C),单位:分例:1 元则提交 100
-            'trade_date'        => '', //交易日期
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
-            // 'risk_content'    => '{"client_ip":"127.0.0.1"}', //风险控制参数
+            'txn_sub_type'    => '15',  // 交易子类(M)
+            'trans_id'        => Tool::generateTransId(),  // 商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复
+            'bind_id'         => '',  // 绑定标识号(M),用于绑定关系的唯一标识
+            'txn_amt'         => '',  // 短信验证码(C),单位:分 例:1 元则提交 100
+            'trade_date'        => '',  // 订单日期(M),可以不传,sdk 会自动生成
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  // 请求方保留域(O)
+            'risk_content'    => '{"client_ip":"127.0.0.1"}',  // 风险控制参数(M), json化字符串数据,建议传入到 $payData
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -319,12 +319,12 @@ class Sdk
     public function doPay($payData)
     {
         $params = [
-            'txn_sub_type'    => '16', //交易子类(M)
-            'business_no'    => '', // `prePay` 那一步宝付返回得到的业务流水号
-            'sms_code'         => '', //支付时的短信验证码,若开通短信类交易则必填
-            'trade_date'        => '', //交易日期(M)
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '16',  // 交易子类(M)
+            'business_no'     => '',  // `prePay` 那一步宝付返回得到的业务流水号(M)
+            'sms_code'        => '',  // 支付时的短信验证码,若开通短信类交易则必填
+            'trade_date'      => '',  // 订单日期(M),可以不传,sdk 会自动生成
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '', // 请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -342,11 +342,11 @@ class Sdk
     public function queryOrder($queryOrderData)
     {
         $params = [
-            'txn_sub_type'    => '31', //交易子类(M)
-            'orig_trans_id'   => '', //原始商户订单号(M),由宝付返回,用于在后续类交易中唯一标识一笔交易
-            'orig_trade_date' => '', //原始订单日期(M)
-            'additional_info' => '', //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '', //请求方保留域(O)
+            'txn_sub_type'    => '31',  //交易子类(M)
+            'orig_trans_id'   => '',  //原始商户订单号(M),由宝付返回,用于在后续类交易中唯一标识一笔交易
+            'orig_trade_date' => '',  //原始订单日期(M)
+            'additional_info' => '',  //附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  //请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -363,7 +363,6 @@ class Sdk
      */
     private function _post($data)
     {
-
         $rsa = $this->_rsa;
         $defaultConfig = $this->getDefaultConfig();
         $requestUrl = isset($defaultConfig['request_url']) ? $defaultConfig['request_url'] : 'https://tgw.baofoo.com/cutpayment/api/backTransRequest';

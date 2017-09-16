@@ -1,8 +1,21 @@
-# Douyasi/Baofoo
+# Baofoo
 
 可能是最好的 宝付SDK 第三方包！
 
 ## 使用示例
+
+### composer 加载
+
+```
+{
+    "require": {
+        "douyasi/baofoo": "dev-master"
+    },
+    "repositories": [
+        {"type": "vcs", "url": "git@github.com:douyasi/baofoo.git"}
+    ]
+}
+```
 
 ### 自动加载与初始化
 
@@ -33,8 +46,6 @@ $baofoo = new \Douyasi\Baofoo\Sdk($config, $bfpayConf);
 ### 直接绑卡
 
 ```php
-<?php
-
 
 $bindData = [
     // 'trans_serial_no' => '',  // 可以不传，sdk 会自动生成
@@ -112,6 +123,7 @@ $ret = $baofoo->unbindCard($unbindData)
 ### 查询绑卡状态
 
 ```php
+
 $queryBindData = [
     // 'trans_serial_no' => '',  // 可以不传，sdk 会自动生成
     'acc_no' => '6222020111122220000',
@@ -124,6 +136,7 @@ $ret = $baofoo->queryBindCard($queryBindData);
 ### 预支付
 
 ```php
+
 $payData = [
     // 'trans_serial_no' => '', // 可以不传，sdk 会自动生成
     // 'trans_id' => '', // 可以不传，sdk 会自动生成
@@ -144,10 +157,11 @@ $ret = $baofoo->prePay($payData);
 ### 确定支付
 
 ```php
+
 $payData = [
     'business_no'    => 'TI170915124325276174', // `prePay` 那一步宝付返回得到的业务流水号
     'sms_code'         => '123456', // 支付时的短信验证码,若开通短信类交易则必填
-    'trade_date'       => '20170915191103', // 交易日期(M),可以不传，sdk 会自动生成
+    'trade_date'       => '20170915191103', // 订单交易日期(M),可以不传，sdk 会自动生成
     'additional_info' => '', //附加字段(O),长度不超过 128 位
     'req_reserved'    => '', //请求方保留域(O)
 ];
@@ -162,7 +176,7 @@ $ret = $baofoo->doPay($payData);
 ## 参考资源
 
 - 《宝付认证支付 API 商户接入接口文档》
-- Inspired by [GitHub source](https://github.com/navyxie/baofoo) 。
+- Inspired by [navyxie/baofoo](https://github.com/navyxie/baofoo) 。
 
 ## 联系方式
 
