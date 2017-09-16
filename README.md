@@ -117,7 +117,7 @@ $unbindData = [
     'trans_id' => 'TI170915101656903557',  // 必须与绑卡的时候的订单号一致
 ];
 
-$ret = $baofoo->unbindCard($unbindData)
+$ret = $baofoo->unbindCard($unbindData);
 ```
 
 ### 查询绑卡状态
