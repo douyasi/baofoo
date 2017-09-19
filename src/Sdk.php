@@ -83,6 +83,13 @@ class Sdk
     protected $_bfpayConf;
 
     /**
+     * 请求 url
+     * 
+     * @var string
+     */
+    private $_request_url;
+
+    /**
      * 构造函数
      * 
      * @param array $config
@@ -104,6 +111,7 @@ class Sdk
             'additional_info' => '', //附加字段
             'req_reserved'    => '', //保留
         ];
+        $this->_request_url = (isset($config['request_url']) && !empty($config['request_url'])) ? $config['request_url'] : 'https://tgw.baofoo.com/cutpayment/api/backTransRequest';
         $this->_config = array_merge($defaultConfig, $config);
 
         $bfpayDefaultConf = [
@@ -365,7 +373,7 @@ class Sdk
     {
         $rsa = $this->_rsa;
         $defaultConfig = $this->getDefaultConfig();
-        $requestUrl = isset($defaultConfig['request_url']) ? $defaultConfig['request_url'] : 'https://tgw.baofoo.com/cutpayment/api/backTransRequest';
+        $requestUrl = $this->_request_url;
 
         $data['biz_type']        = '0000'; //接入类型(C),默认 0000
         $data['terminal_id']     = isset($data['terminal_id']) ? $data['terminal_id'] : (isset($defaultConfig['terminal_id']) ? $defaultConfig['terminal_id'] : ''); //终端号(M)
