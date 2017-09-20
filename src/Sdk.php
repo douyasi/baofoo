@@ -6,6 +6,8 @@ use Douyasi\Baofoo\Rsa;
 use Douyasi\Baofoo\Tool;
 use Douyasi\Baofoo\BaofooException;
 use Douyasi\Baofoo\Bankcard;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 /**
  * Class Sdk
@@ -75,6 +77,7 @@ class Sdk
 
     /**
      * baofoo Rsa
+     * 
      * @var \Douyasi\Baofoo\Rsa
      */
     private $_rsa;
@@ -92,6 +95,13 @@ class Sdk
      * @var string
      */
     private $_request_url;
+
+    /**
+     * 日志
+     *
+     * @var Logger
+     */
+    private $_log;
 
     /**
      * 构造函数
@@ -396,10 +406,10 @@ class Sdk
         $data['member_id']       = isset($data['member_id']) ? $data['member_id'] : (isset($defaultConfig['member_id']) ? $defaultConfig['member_id'] : '');  // 商户号(M),宝付提供给商户的唯一编号
 
         if ($data['txn_sub_type'] != '31') {  // 查询交易状态的接口不需要 `trade_date`
-            $data['trade_date'] = isset($data['trade_date']) && !empty($data['trade_date']) ? date('YmdHis', strtotime($data['trade_date'])) : date('YmdHis'); //订单日期(M),14 位定长。格式:年年年年月月日日时时分分秒秒
+            $data['trade_date'] = isset($data['trade_date']) && !empty($data['trade_date']) ? date('YmdHis', strtotime($data['trade_date'])) : date('YmdHis');  // 订单日期(M),14 位定长。格式:年年年年月月日日时时分分秒秒
         }
 
-        $data['trans_serial_no'] = isset($data['trans_serial_no']) && !empty($data['trans_serial_no']) ? $data['trans_serial_no'] : Tool::generateSerialNo(); ////商户流水号(M),8-20 位字母和数字,每次请求都不可重复(当天和历史均不可重复)
+        $data['trans_serial_no'] = isset($data['trans_serial_no']) && !empty($data['trans_serial_no']) ? $data['trans_serial_no'] : Tool::generateSerialNo();  // 商户流水号(M),8-20 位字母和数字,每次请求都不可重复(当天和历史均不可重复)
 
 
         $jsonData = json_encode($data);

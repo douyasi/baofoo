@@ -14,5 +14,8 @@
             "Douyasi\\Baofoo\\": "src"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "require": {
+        "monolog/monolog": "^1.23"
+    }
 }
