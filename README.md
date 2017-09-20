@@ -170,7 +170,9 @@ $payData = [
     'mobile' => '13800000000',
     'acc_no' => '6222020111122220000',  // 银行卡号
     'trade_date' => '20170915191103', // 可以不传，sdk 会自动生成, 手动传入，必须符合宝付要求的日期格式
-    'risk_content' => '{"client_ip":"127.0.0.1"}', // 必须传入，请将客户真实 ip 传入
+    'risk_content' => [
+        'client_ip' => '127.0.0.1', // 必须传入，请将客户真实 ip 传入
+    ],
 ];
 
 $ret = $baofoo->prePay($payData);

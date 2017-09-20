@@ -321,7 +321,9 @@ class Sdk
             'trade_date'      => '',  // 订单日期(M),可以不传,sdk 会自动生成
             'additional_info' => '',  // 附加字段(O),长度不超过 128 位
             'req_reserved'    => '',  // 请求方保留域(O)
-            'risk_content'    => '{"client_ip":"127.0.0.1"}',  // 风险控制参数(M), json化字符串数据,建议传入到 $payData
+            'risk_content'    => [
+                                    'client_ip' => '127.0.0.1',
+                                 ],  // 风险控制参数(M), json化字符串数据,建议传入到 $payData
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
@@ -372,7 +374,7 @@ class Sdk
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
-        $data = array_merge($params, $msgData);
+        $data = array_merge($params, $queryOrderData);
 
         return $this->_post($data);
     }
@@ -389,15 +391,18 @@ class Sdk
         $defaultConfig = $this->getDefaultConfig();
         $requestUrl = $this->_request_url;
 
-        $data['biz_type']        = '0000'; //接入类型(C),默认 0000
-        $data['terminal_id']     = isset($data['terminal_id']) ? $data['terminal_id'] : (isset($defaultConfig['terminal_id']) ? $defaultConfig['terminal_id'] : ''); //终端号(M)
-        $data['member_id']       = isset($data['member_id']) ? $data['member_id'] : (isset($defaultConfig['member_id']) ? $defaultConfig['member_id'] : ''); //商户号(M),宝付提供给商户的唯一编号
-        $data['trade_date']      = isset($data['trade_date']) && !empty($data['trade_date']) ? date('YmdHis', strtotime($data['trade_date'])) : date('YmdHis'); //订单日期(M),14 位定长。格式:年年年年月月日日时时分分秒秒
+        $data['biz_type']        = '0000';  // 接入类型(C),默认 0000
+        $data['terminal_id']     = isset($data['terminal_id']) ? $data['terminal_id'] : (isset($defaultConfig['terminal_id']) ? $defaultConfig['terminal_id'] : '');  // 终端号(M)
+        $data['member_id']       = isset($data['member_id']) ? $data['member_id'] : (isset($defaultConfig['member_id']) ? $defaultConfig['member_id'] : '');  // 商户号(M),宝付提供给商户的唯一编号
+
+        if ($data['txn_sub_type'] != '31') {  // 查询交易状态的接口不需要 `trade_date`
+            $data['trade_date'] = isset($data['trade_date']) && !empty($data['trade_date']) ? date('YmdHis', strtotime($data['trade_date'])) : date('YmdHis'); //订单日期(M),14 位定长。格式:年年年年月月日日时时分分秒秒
+        }
+
         $data['trans_serial_no'] = isset($data['trans_serial_no']) && !empty($data['trans_serial_no']) ? $data['trans_serial_no'] : Tool::generateSerialNo(); ////商户流水号(M),8-20 位字母和数字,每次请求都不可重复(当天和历史均不可重复)
 
 
         $jsonData = json_encode($data);
-        var_dump($jsonData);
 
 
         // 组装请求数据
@@ -410,8 +415,6 @@ class Sdk
             'data_type'    => isset($data['data_type']) ? $data['data_type'] : (isset($defaultConfig['data_type']) ? $defaultConfig['data_type'] : 'json'),
             'data_content' => $rsa->encryptedByPrivateKey($jsonData),
         ];
-
-        var_dump($postData);
 
         // 请求宝付接口
         try {
@@ -437,26 +440,27 @@ class Sdk
     {
         $formString = http_build_query($postData);  //格式化参数
 
-        $curl = curl_init(); // 启动一个CURL会话
-        curl_setopt($curl, CURLOPT_URL, $url); // 要访问的地址
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 对认证证书来源的检查
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 从证书中检查SSL加密算法是否存在
-        curl_setopt($curl, CURLOPT_POST, true); // 发送一个常规的Post请求
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $formString); // Post提交的数据包
-        curl_setopt($curl, CURLOPT_TIMEOUT, 60); // 设置超时限制防止死循环返回
+        $curl = curl_init();  // 启动一个CURL会话
+        curl_setopt($curl, CURLOPT_URL, $url);  // 要访问的地址
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);  // 对认证证书来源的检查
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);  // 从证书中检查SSL加密算法是否存在
+        curl_setopt($curl, CURLOPT_POST, true);  // 发送一个常规的Post请求
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $formString);  // Post提交的数据包
+        curl_setopt($curl, CURLOPT_TIMEOUT, 60);  // 设置超时限制防止死循环返回
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        $retData = curl_exec($curl); // 执行操作
+        $retData = curl_exec($curl);  // 执行操作
         if (curl_errno($curl)) {
-            $error = curl_error($curl);//捕抓异常
+            $error = curl_error($curl);  // 捕抓异常
             throw new BaofooException('Curl 请求数据异常：'.$error, BaofooException::CURL_POST_DATA_ERROR);
         }
-        curl_close($curl); // 关闭CURL会话
+        curl_close($curl);  // 关闭CURL会话
         return $retData;
     }
 
     /**
      * paySuccess 判断订单是否支付成功
+     * 
      * @param  array $resData 明文json数据
      * @return array [code:200表示成功]
      */
