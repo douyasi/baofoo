@@ -10,10 +10,7 @@
 {
     "require": {
         "douyasi/baofoo": "dev-master"
-    },
-    "repositories": [
-        {"type": "vcs", "url": "git@github.com:douyasi/baofoo.git"}
-    ]
+    }
 }
 ```
 
@@ -43,21 +40,41 @@ $bfpayConf = [
 $baofoo = new \Douyasi\Baofoo\Sdk($config, $bfpayConf);
 ```
 
-### 直接绑卡
+### 说明
+
+目前本 `sdk` 支持以下交易子类：
+
+ - 01 直接绑卡类交易
+ - 02 解除绑定关系类交易
+ - 03 查询绑定关系类交易
+ - 11 预绑卡类交易
+ - 12 确认绑卡类交易
+ - 15 预支付交易(发送短信)
+ - 16 支付确认交易
+ - 31 交易状态查询类交易
+
+以上 8 个接口都支持传入以下可选项：
+
+```
+    // 'additional_info' => '测试',  // 附加字段，可以不传或留空
+    // 'req_reserved' => '保留字段',  // 请求方保留域，可以不传或留空
+```
+
+### 直接绑卡(01)
 
 ```php
 
 $bindData = [
     // 'trans_serial_no' => '',  // 可以不传，sdk 会自动生成
-    // 'trans_id' => '', // 可以不传，sdk 会自动生成
+    // 'trans_id' => '',  // 可以不传，sdk 会自动生成
+    /* 持卡人四要素*/
     'acc_no' => '6222020111122220000',
     'id_holder' => '张宝',
     'id_card' => '320301198502169142',
     'mobile' => '13800000000',
-    // 'pay_code' => '',  // 建议不要手动传 pay_code ，sdk 会根据卡号自动查询得到 pay_code ，而且会根据配置 限制是否允许绑定信用卡
-    'additional_info' => '测试',
-    'req_reserved' => '保留字段',
-    // 'sms_code' => '123456',  // 直接绑卡无须传 sms_code
+    // 'pay_code' => '',  // 建议不要手动传 `pay_code` ，sdk 会根据卡号自动查询得到 `pay_code` ，而且会根据配置 限制是否允许绑定信用卡
+    // 'additional_info' => '测试',  // 附加字段，可以不传或留空，其他接口亦是如此
+    // 'req_reserved' => '保留字段',  // 请求方保留域，可以不传或留空，其他接口亦是如此
 ];
 
 $ret = $baofoo->bindCard($bindData);
@@ -108,24 +125,27 @@ $ret = $baofoo->bindCard($bindData);
 }
 ```
 
-### 解除绑卡
+### 解除绑卡(02)
 
 ```php
 
 $unbindData = [
-    'bind_id' => '201709151709081000009905295',
+    // 'trans_serial_no' => '',  // 可以不传，sdk 会自动生成
+    // 'trade_date' => '',  // 可以不传，sdk 根据当前日期自动生成
+    'bind_id' => '201709151709081000009905295',  // 绑卡时得到的 bind_id
     'trans_id' => 'TI170915101656903557',  // 必须与绑卡的时候的订单号一致
 ];
 
 $ret = $baofoo->unbindCard($unbindData);
 ```
 
-### 查询绑卡状态
+### 查询绑卡状态(03)
 
 ```php
 
 $queryBindData = [
     // 'trans_serial_no' => '',  // 可以不传，sdk 会自动生成
+    // 'trade_date' => '',  // 可以不传，sdk 根据当前日期自动生成
     'acc_no' => '6222020111122220000',
 ];
 
@@ -133,28 +153,26 @@ $ret = $baofoo->queryBindCard($queryBindData);
 ```
 
 
-### 预支付
+### 预支付(15)
 
 ```php
 
 $payData = [
-    // 'trans_serial_no' => '', // 可以不传，sdk 会自动生成
-    // 'trans_id' => '', // 可以不传，sdk 会自动生成
+    // 'trans_serial_no' => '',  // 可以不传，sdk 会自动生成
+    // 'trans_id' => '',  // 可以不传，sdk 会自动生成
     'bind_id' => '201709151709081000009905295',
     'txn_amt' => 1,  // 金额，分为单位，这里是 1分
     'mobile' => '13800000000',
     'acc_no' => '6222020111122220000',  // 银行卡号
-    'trade_date' => '20170915191103', // 可以不传，sdk 会自动生成
-    'additional_info' => '测试',  // 可选项
-    'req_reserved' => '保留字段',  // 可选项
-    'risk_content' => '{"client_ip":"100.0.0.0"}',
+    'trade_date' => '20170915191103',  // 可以不传，sdk 会自动生成
+    'risk_content' => '{"client_ip":"127.0.0.1"}', // 必须传入，请将客户真实 ip 传入
 ];
 
 $ret = $baofoo->prePay($payData);
 ```
 
 
-### 确定支付
+### 确定支付(16)
 
 ```php
 
@@ -171,7 +189,7 @@ $ret = $baofoo->doPay($payData);
 
 ### 其它接口
 
-其它接口暂不列出示例，请查阅 `Sdk.php` 代码。
+其它接口暂不列出示例，请查阅 `Sdk.php` 代码调用。
 
 ## 参考资源
 
