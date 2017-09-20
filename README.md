@@ -57,6 +57,7 @@ $bfpayConf = [
     'private_key_path'         => '',  // 私钥路径，留空使用 res\cer 文件
     'allowed_bind_credit_card' => false,  // 是否允许绑定信用卡，某些金融场景可能不允许使用信用卡 CC
     'debug'                    => false,  // 是否开启 debug 模式
+    'logger_path'              => '',  // 记录请求日志的根路径，请使用绝对路径
 ];
 
 $baofoo = new \Douyasi\Baofoo\Sdk($config, $bfpayConf);

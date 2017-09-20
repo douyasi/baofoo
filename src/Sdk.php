@@ -101,7 +101,7 @@ class Sdk
      *
      * @var Logger
      */
-    private $_log;
+    private $_logger;
 
     /**
      * 构造函数
@@ -144,6 +144,11 @@ class Sdk
         }
 
         $this->_rsa = new Rsa($this->_bfpayConf);
+
+        $logger = new Logger('baofoo_logger');
+        $logPath = (isset($this->_bfpayConf['logger_path']) && !empty($this->_bfpayConf['logger_path'])) ? rtrim($this->_bfpayConf['logger_path'], '/').'/baofoo-'.date('Ymd').'.log' : __DIR__ . '/../log/baofoo-'.date('Ymd').'.log';
+        $logger->pushHandler(new StreamHandler($logPath, Logger::DEBUG));
+        $this->_logger = $logger;
     }
 
     /**
@@ -413,7 +418,8 @@ class Sdk
 
 
         $jsonData = json_encode($data);
-
+        $this->_logger->debug('-----BAOFOO DEBUG START-----');
+        $this->_logger->info('baofoo data_content data:  ', $data);
 
         // 组装请求数据
         $postData = [
@@ -429,10 +435,17 @@ class Sdk
         // 请求宝付接口
         try {
             $retData = $this->_curl_post($postData, $requestUrl);
+            $this->_logger->info('baofoo response raw data:  ', [$retData]);
             $retBody = $this->_decryptByPublicKey($retData);
             $resData = json_decode($retBody, true);
-            return $this->_success($resData);
+            $this->_logger->info('baofoo response decrypted data:  ', $resData);
+            $apiRet = $this->_success($resData);
+            $this->_logger->info('douyasi/baofoo api return data:  ', $apiRet);
+            $this->_logger->debug('-----BAOFOO DEBUG END-----');
+            return $apiRet;
         } catch (\Exception $e) {
+            $this->_logger->error('baofoo request throw exception:  ', ['code' => $e->getCode(), 'msg' => $e->getMessage()]);
+            $this->_logger->debug('-----BAOFOO DEBUG END-----');
             throw new BaofooException($e->getMessage(), $e->getCode());
         }
 
@@ -460,8 +473,12 @@ class Sdk
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $retData = curl_exec($curl);  // 执行操作
+
+        $this->_logger->info('baofoo request data:  ', ['post_data' => $postData, 'form_string' => $formString, 'request_url' => $url]);
+
         if (curl_errno($curl)) {
             $error = curl_error($curl);  // 捕抓异常
+            $this->_logger->error('curl request data error:  '.$error);
             throw new BaofooException('Curl 请求数据异常：'.$error, BaofooException::CURL_POST_DATA_ERROR);
         }
         curl_close($curl);  // 关闭CURL会话
