@@ -292,7 +292,27 @@ class Sdk
         $params = array_merge($this->getDefaultConfig(), $params);
         $data = array_merge($params, $bindData);
 
-        return $this->_post($data);
+        if (!$data['pay_code']) {  // 建议不要手动传 `pay_code`
+            try {
+                $card = Bankcard::info($data['acc_no']);
+                if ($card['validated']) {
+                    if (!$this->_bfpayConf['allowed_bind_credit_card'] && $card['cardType'] == 'CC') {
+                        throw new BaofooException('不支持信用卡', BaofooException::CREDIT_CARD_NOT_ALLOWED);
+                    }
+                    $data['pay_code'] = Tool::getPayCode($card['bank']);
+                    return $this->_post($data);
+                } else {
+                    throw new BaofooException('银行卡BIN非法，请输入合法的银行卡号', BaofooException::BANKCARD_NUMBER_ILLEGAL);
+                }
+
+            } catch (\Exception $e) {
+                throw $e;
+            }
+
+        } else {
+            return $this->_post($data);
+        }
+
     }
 
     /**
