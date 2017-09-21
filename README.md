@@ -31,7 +31,7 @@
 
 ### composer 加载
 
-在 `composer.json` 文件中添加上 `"douyasi/baofoo": "dev-master"` 项，然后执行 `composer update` 命令。
+在 `composer.json` 文件中添加上 `"douyasi/baofoo": "~1.0"` 项，然后执行 `composer update` 命令。
 
 ```json
 {
@@ -40,6 +40,8 @@
     }
 }
 ```
+
+或者在 `bash` 下跳到项目根目录执行 `composer require 'douyasi/baofoo:~1.0'` 命令安装。
 
 ### 代码引入与初始化
 
