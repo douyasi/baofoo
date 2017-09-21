@@ -4,8 +4,8 @@
 
 [![Latest Stable Version](https://poser.pugx.org/douyasi/baofoo/v/stable.svg?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
 [![Latest Unstable Version](https://poser.pugx.org/douyasi/baofoo/v/unstable.svg?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
-[![License](https://poser.pugx.org/douyasi/identity-card/license?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
-[![Total Downloads](https://poser.pugx.org/douyasi/identity-card/downloads?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
+[![License](https://poser.pugx.org/douyasi/baofoo/license?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
+[![Total Downloads](https://poser.pugx.org/douyasi/baofoo/downloads?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
 
 ## 使用说明
 
