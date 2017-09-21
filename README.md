@@ -1,6 +1,11 @@
 # Baofoo
 
-可能是最好的第三方宝付 SDK ！
+>   可能是最好的第三方宝付 SDK ！
+
+[![Latest Stable Version](https://poser.pugx.org/douyasi/baofoo/v/stable.svg?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
+[![Latest Unstable Version](https://poser.pugx.org/douyasi/baofoo/v/unstable.svg?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
+[![License](https://poser.pugx.org/douyasi/identity-card/license?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
+[![Total Downloads](https://poser.pugx.org/douyasi/identity-card/downloads?format=flat-square)](https://packagist.org/packages/douyasi/baofoo)
 
 ## 使用说明
 
@@ -31,7 +36,7 @@
 ```json
 {
     "require": {
-        "douyasi/baofoo": "dev-master"
+        "douyasi/baofoo": "~1.0"
     }
 }
 ```
