@@ -46,6 +46,7 @@ class Rsa
 
         if ($this->debug) {
             echo 'public key path: '.$public_key_path.' .'.PHP_EOL;
+            echo 'private key path: '.$private_key_path.' .'.PHP_EOL;
             echo 'private key '.(empty($private_key) == true ? 'unavailable' : 'available').' .'.PHP_EOL;
             echo 'Baofoo public key '.(empty($this->public_key) == true ? 'unavailable' : 'available').' .'.PHP_EOL;
         }
@@ -91,7 +92,7 @@ class Rsa
         $encryptPos = 0;
         try {
             while ($encryptPos < $totalLen) {
-                openssl_private_encrypt(substr($decrypted, $encryptPos, self::BAOFOO_ENCRYPT_LEN), $encryptData, $this-> private_key);
+                openssl_private_encrypt(substr($decrypted, $encryptPos, self::BAOFOO_ENCRYPT_LEN), $encryptData, $this->private_key);
                 $encrypted .= bin2hex($encryptData);
                 $encryptPos += self::BAOFOO_ENCRYPT_LEN;
             }
