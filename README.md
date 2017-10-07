@@ -388,13 +388,15 @@ $ret = $foPay->agentPayStatusQuery($data);
 
 上面测试代码返回值 `json` 化结果：
 
+> `state` 订单交易处理状态 M 0:转账中; 1:转账成功; -1:转账失败; 2:转账退款.
+
 ```json
 {
     "trans_content":{
         "trans_reqDatas":[
             {
                 "trans_reqData":{
-                    "state":-1,  // state 订单交易处理状态 M 0:转账中; 1:转账成功; -1:转账失败; 2:转账退款;
+                    "state":-1,
                     "to_acc_dept":"||中国银行",
                     "to_acc_name":"张宝",
                     "to_acc_no":"6222020111122220000",
