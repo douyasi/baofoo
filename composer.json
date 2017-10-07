@@ -16,6 +16,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "monolog/monolog": "^1.23"
+        "monolog/monolog": "^1.23",
+        "php": ">=5.6.4",
     }
 }
