@@ -114,16 +114,18 @@ class Sdk
             throw new BaofooException('配置加载错误', BaofooException::BAOFOO_LOADING_CONFIG_ERROR);
         }
         $defaultConfig = [
-            'version'         => '4.0.0.0', //版本号
-            'data_type'       => 'json', //加密报文的数据类型（xml/json）
-            'txn_type'        => '0431', //交易类型
-            'biz_type'        => '0000', //接入类型
-            'id_card_type'    => '01', //证件类型固定01（身份证） 
-            'acc_pwd'         => '',  //银行卡密码（传空）
-            'valid_date'      => '', //卡有效期 （传空）
-            'valid_no'        => '', //卡安全码（传空）
-            'additional_info' => '', //附加字段
-            'req_reserved'    => '', //保留
+            'version'         => '4.0.0.0',  // 版本号
+            'data_type'       => 'json',  // 加密报文的数据类型（xml/json）
+            'txn_type'        => '0431',  // 交易类型
+            'biz_type'        => '0000',  // 接入类型
+            'id_card_type'    => '01',  // 证件类型固定01（身份证） 
+            'acc_pwd'         => '',  // 银行卡密码（传空）
+            'valid_date'      => '',  // 卡有效期 （传空）
+            'valid_no'        => '',  // 卡安全码（传空）
+            'additional_info' => '',  // 附加字段
+            'req_reserved'    => '',  // 保留
+            'member_id'       => '100000276',  // 默认测试商户号
+            'terminal_id'     => '100000990',  // 默认测试终端号
         ];
         $this->_request_url = (isset($config['request_url']) && !empty($config['request_url'])) ? $config['request_url'] : 'https://tgw.baofoo.com/cutpayment/api/backTransRequest';
         $this->_config = array_merge($defaultConfig, $config);
@@ -188,7 +190,7 @@ class Sdk
             'valid_date'      => '',  // 卡有效期(C)
             'valid_no'        => '',  // 卡安全码(C),银行卡背后最后三位数字
             'pay_code'        => '',  // 银行编码(M),建议不要手动传 `pay_code` , sdk 会根据卡号自动查询得到 `pay_code` ，而且会根据配置 限制是否允许绑定信用卡
-            'trade_date'      => '',  // 订单日期(M),可以不传，sdk 根据当前日期自动生成
+            'trade_date'      => '',  // 订单日期(M),可以不传,sdk 根据当前日期自动生成
             'additional_info' => '',  // 附加字段(O),长度不超过 128 位
             'req_reserved'    => '',  // 请求方保留域(O)
         ];
@@ -274,7 +276,7 @@ class Sdk
     {
         $params = [
             'txn_sub_type'    => '11',  // 交易子类(M)
-            'trans_serial_no' => '',  // 商户流水号(M),可以不传，sdk 根据当前日期自动生成
+            'trans_serial_no' => '',  // 商户流水号(M),可以不传,sdk 根据当前日期自动生成
             'trans_id'        => Tool::generateTransId(), // 商户订单号(M),唯一订单号,8-20 位字母和数字,同一天内不可重复
             'acc_no'          => '',  // 绑定卡号(M),请求绑定的银行卡号
             'id_card_type'    => '01',  // 身份证类型(O),默认 01 为身份证号
@@ -284,7 +286,7 @@ class Sdk
             'valid_date'      => '',  // 卡有效期(C)
             'valid_no'        => '',  // 卡安全码(C),银行卡背后最后三位数字
             'pay_code'        => '',  // 银行编码(M)
-            'trade_date'      => '',  // 订单日期(M),可以不传，sdk 根据当前日期自动生成
+            'trade_date'      => '',  // 订单日期(M),可以不传,sdk 根据当前日期自动生成
             'additional_info' => '',  // 附加字段(O),长度不超过 128 位
             'req_reserved'    => '',  // 请求方保留域(O)
         ];
@@ -456,7 +458,11 @@ class Sdk
         try {
             $retData = $this->_curl_post($postData, $requestUrl);
             $this->_logger->info('baofoo response raw data:  ', [$retData]);
-            $retBody = $this->_decryptByPublicKey($retData);
+            if (count(explode('resp_code', $retData)) > 1) {  // 特殊异常会返回明文响应，明文响应中会有 `resp_code` 字段
+                $retBody = $retData;
+            } else {
+                $retBody = $this->_decryptByPublicKey($retData);
+            }
             $resData = json_decode($retBody, true);
             $this->_logger->info('baofoo response decrypted data:  ', $resData);
             $apiRet = $this->_success($resData);
@@ -515,17 +521,20 @@ class Sdk
     {
         $code = 200;
         $msg = 'ok';
+        $need_query = false;
         if (!Tool::isSuccess($resData)) {
             $code = 500;
             $ret = Tool::getBaofooResult($resData['resp_code'], $resData['resp_msg']);
             if (!$ret['status']) {
                 $msg = $ret['message'];
             }
+            $need_query = $ret['need_query'];
         }
         return [
-            'code' => $code,
-            'msg'  => $msg,
-            'data' => $resData,
+            'code'       => $code,
+            'msg'        => $msg,
+            'need_query' => $need_query,  // 交易结果暂未知，需查询类时会返回true
+            'data'       => $resData,
         ];
     }
 
