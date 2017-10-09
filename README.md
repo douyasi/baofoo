@@ -498,8 +498,8 @@ $ret = $foPay->agentPaySplit($data1, $data2);
 
 ## 参考资源
 
-- 《宝付认证支付 API 商户接入接口文档》（V4.0.4.0）
-- 《宝付代付 API 接口文档》（V4.1.11）
+- 《宝付认证支付 API 商户接入接口文档》（V4.0.4.0）[link](docs/宝付认证支付API接口文档V4.0.4.0.doc)
+- 《宝付代付 API 接口文档》（V4.1.11）[link](docs/宝付代付API接口文档V4.1.11.doc)
 - Inspired by [navyxie/baofoo](https://github.com/navyxie/baofoo) 。
 
 ## 联系方式
