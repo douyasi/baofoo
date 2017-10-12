@@ -397,17 +397,21 @@ class Sdk
      * queryOrder 交易状态查询类交易
      * 
      * @param  array $queryOrderData
-     * @return mixed
+     * @return mixed 正常情况会返回数组，`order_stat` 状态码取值（大写字母）可能为以下值：
+     * S - 交易成功
+     * F - 交易失败
+     * I - 处理中
+     * FF - 交易失败 (当状态码结果 为 `FF` 时，非支付订单交易结果，如:必传参数缺失时，报 文解析失败时，参数格式校验 失败等。)
      */
     public function queryOrder($queryOrderData)
     {
         $params = [
             'trans_serial_no' => '',  // 商户流水号(M),可以不传,sdk 会自动生成
-            'txn_sub_type'    => '31',  //交易子类(M)
-            'orig_trans_id'   => '',  //原始商户订单号(M),由宝付返回,用于在后续类交易中唯一标识一笔交易
-            'orig_trade_date' => '',  //原始订单日期(M)
-            'additional_info' => '',  //附加字段(O),长度不超过 128 位
-            'req_reserved'    => '',  //请求方保留域(O)
+            'txn_sub_type'    => '31',  // 交易子类(M)
+            'orig_trans_id'   => '',  // 原始商户订单号(M),由宝付返回,用于在后续类交易中唯一标识一笔交易
+            'orig_trade_date' => '',  // 原始订单日期(M)
+            'additional_info' => '',  // 附加字段(O),长度不超过 128 位
+            'req_reserved'    => '',  // 请求方保留域(O)
         ];
 
         $params = array_merge($this->getDefaultConfig(), $params);
