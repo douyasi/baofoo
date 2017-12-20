@@ -233,7 +233,7 @@ $ret = $baofoo->doPay($payData);
 require __DIR__ . '/vendor/autoload.php';
 
 $config = [
-    'version'         => '4.0.0.0',  // 版本号
+    'version'         => '4.0.0',  // 版本号
     'data_type'       => 'json',  // 加密报文的数据类型（xml/json）
     'member_id'       => '100000178',  // 默认测试商户号
     'terminal_id'     => '100000859',  // 默认测试终端号
