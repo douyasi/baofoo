@@ -98,7 +98,7 @@ class FoPaySdk
         }
         // 公共参数 配置
         $defaultConfig = [
-            'version'         => '4.0.0.0',  // 版本号
+            'version'         => '4.0.0',  // 版本号
             'data_type'       => 'json',  // 加密报文的数据类型（xml/json）
             'terminal_id'     => '100000178',  // 默认测试商户号
             'member_id'       => '100000859',  // 默认测试终端号
